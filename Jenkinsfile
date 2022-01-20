@@ -16,6 +16,11 @@ pipeline {
           app = docker.build("akhng999/vulnerablewebapp") 
         }
       } 
+      post {
+        success {
+          archiveArtifacts 'target/*.hpi,target/*.jpi'
+        }
+      }
     }
     stage('Scan container before pushing to Dockerhub') {    
       steps {
@@ -37,6 +42,11 @@ pipeline {
             echo "Security Test Failed" 
             env.flagError = "true"  
           }
+        }
+      }
+      post {
+        always {
+          junit '**/twistlock-reports/**/*.xml'
         }
       }
     }
