@@ -1,7 +1,7 @@
 pipeline {
       agent any
       environment {
-           TWISTLOCK_TOKEN = credentials("TWISLOCK_TOKEN")
+           TWISTLOCK_TOKEN = credentials("TWISTLOCK_TOKEN")
         }
         
   stages {
@@ -29,7 +29,7 @@ pipeline {
               chmod +x twistcli
               ./twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
-                --token $TWISTLOCK_TOKEN \
+                --token ${TWISTLOCK_TOKEN} \
                 --details \
                 akhng999/vulnerablewebapp          
             '''
