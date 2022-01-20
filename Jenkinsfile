@@ -16,11 +16,6 @@ pipeline {
           app = docker.build("akhng999/vulnerablewebapp") 
         }
       } 
-      post {
-        success {
-          archiveArtifacts 'target/*.hpi,target/*.jpi'
-        }
-      }
     }
     stage('Scan container before pushing to Dockerhub') {    
       steps {
