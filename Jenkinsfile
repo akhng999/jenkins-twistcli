@@ -1,41 +1,13 @@
 pipeline {
       agent any
       environment {
-           CHKP_CLOUDGUARD_ID = credentials("CHKP_CLOUDGUARD_ID")
-           CHKP_CLOUDGUARD_SECRET = credentials("CHKP_CLOUDGUARD_SECRET")
-           //SG_CLIENT_ID = credentials("SG_CLIENT_ID")
-           //SG_SECRET_KEY = credentials("SG_SECRET_KEY")
+           TWISTLOCK_TOKEN = credentials("TWISLOCK_TOKEN")
         }
         
   stages {
     stage('Clone Github repository') {
       steps {
         checkout scm
-      }
-    }
-    stage('Scan source code before containerizing App') {    
-    
-      steps {
-        script {      
-          try {
-            sh 'chmod +x shiftleft' 
-            sh './shiftleft code-scan -s .'
-          } catch (Exception e) {
-              echo "Security Test Failed" 
-              env.flagError = "true"  
-            }
-          }
-      }
-    }
-    stage('Code approval request') {
-      when {
-        expression { env.flagError == "true" }
-      }
-      steps {
-        script {
-        def userInput = input(id: 'confirm', message: 'This code contains vulnerabilities. Would you still like to continue?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Approve Code to Proceed', name: 'approve'] ])
-        env.flagError = "false"  
-        }
       }
     }
     stage('Build Docker Image') {    
@@ -49,8 +21,17 @@ pipeline {
       steps {
         script {      
           try {
+            /* checkpoint cloudguard
             sh 'docker save akhng999/vulnerablewebapp -o vwa.tar' 
             sh './shiftleft image-scan -i ./vwa.tar -t 1800'
+            */
+            sh '''
+              ./twistcli images scan \
+                --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
+                --token $TWISTLOCK_TOKEN \
+                --details \
+                akhng999/vulnerablewebapp          
+            '''
           } catch (Exception e) {
             echo "Security Test Failed" 
             env.flagError = "true"  
