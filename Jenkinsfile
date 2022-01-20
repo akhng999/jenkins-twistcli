@@ -30,6 +30,7 @@ pipeline {
               ./twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
                 --token ${TWISTLOCK_TOKEN} \
+                --publish false \
                 --details \
                 akhng999/vulnerablewebapp          
             '''
@@ -41,7 +42,6 @@ pipeline {
       }
       post {
         always {
-          archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
           junit 'build/reports/**/*.xml'
         }
       }
