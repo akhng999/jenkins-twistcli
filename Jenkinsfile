@@ -26,6 +26,7 @@ pipeline {
             sh './shiftleft image-scan -i ./vwa.tar -t 1800'
             */
             sh '''
+              chmod +x twistcli
               ./twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
                 --token $TWISTLOCK_TOKEN \
