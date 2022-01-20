@@ -26,11 +26,14 @@ pipeline {
             sh './shiftleft image-scan -i ./vwa.tar -t 1800'
             */
             sh '''
-              chmod +x twistcli
-              ./twistcli images scan \
+              docker run \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v ${JENKINS_HOME}/jobs/${JOB_NAME}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
+              akhng999/twistcli \
+              ./tools/twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
                 --token ${TWISTLOCK_TOKEN} \
-                --output-file result.json \
+                --output-file /var/tmp/result.json \
                 --details \
                 akhng999/vulnerablewebapp          
             '''
