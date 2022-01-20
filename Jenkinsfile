@@ -30,7 +30,6 @@ pipeline {
               ./twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
                 --token ${TWISTLOCK_TOKEN} \
-                --publish FALSE \
                 --details \
                 akhng999/vulnerablewebapp          
             '''
