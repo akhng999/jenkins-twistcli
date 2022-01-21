@@ -24,7 +24,7 @@ pipeline {
         // Scan the image
         prismaCloudScanImage ca: '',
         cert: '',
-        image: 'akhng999/vulnerablewebapp*',
+        image: 'akhng999/vulnerablewebapp',
         key: '',
         logLevel: 'info',
         podmanPath: '',
