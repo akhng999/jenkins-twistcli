@@ -1,7 +1,9 @@
 pipeline {
       agent any
       environment {
-           TWISTLOCK_TOKEN = credentials("TWISTLOCK_TOKEN")
+          // TWISTLOCK_TOKEN = credentials("TWISTLOCK_TOKEN")
+          TWISTLOCK_KEY = credentials("TWISTLOCK_KEY")
+          TWISTLOCK_SECRET = credentials("TWISTLOCK_SECRET")
         }
         
   stages {
@@ -32,7 +34,9 @@ pipeline {
               akhng999/twistcli \
               ./tools/twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
-                --token ${TWISTLOCK_TOKEN} \
+                --user ${TWISTLOCK_KEY} \
+                --password ${TWISTLOCK_SECRET} \
+                --publish=false \
                 --output-file /var/tmp/result.json \
                 --details \
                 akhng999/vulnerablewebapp          
@@ -45,7 +49,7 @@ pipeline {
       }
       post {
         always {
-          archiveArtifacts artifacts: 'result.json', fingerprint: true
+          archiveArtifacts artifacts: '/var/tmp/result.json', fingerprint: true
         }
       }
     }
