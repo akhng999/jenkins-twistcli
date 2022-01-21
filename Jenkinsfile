@@ -39,9 +39,9 @@ pipeline {
                 --user ${TWISTLOCK_KEY} \
                 --password ${TWISTLOCK_SECRET} \
                 --publish=false \
-                --output-file /var/tmp/result.json \
+                --output-file result.json \
                 --details \
-                akhng999/vulnerablewebapp; ls -lst /var/tmp/"     
+                akhng999/vulnerablewebapp; cp -p result.json /var/tmp"     
             '''
           } catch (Exception e) {
             echo "Security Test Failed" 
@@ -52,9 +52,10 @@ pipeline {
       post {
         always {
           script {
+            sh 'echo "Cleaning up stopped twistcli container....."'
             sh 'docker rm  $(docker ps --filter name=twistcli-${BUILD_NUMBER} -qa)'
           }
-          archiveArtifacts artifacts: '/var/tmp/result.json', fingerprint: true
+          archiveArtifacts artifacts: '**/*.json', fingerprint: true
         }
       }
     }
