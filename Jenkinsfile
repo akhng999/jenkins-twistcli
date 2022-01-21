@@ -1,8 +1,10 @@
 pipeline {
       agent any
       environment {
-           TWISTLOCK_TOKEN = credentials("TWISTLOCK_TOKEN")
-        }
+        //TWISTLOCK_TOKEN = credentials("TWISTLOCK_TOKEN")
+        TWISTLOCK_KEY = credentials("TWISTLOCK_KEY")
+        TWISTLOCK_SECRET = credentials("TWISTLOCK_SECRET")
+       }
         
   stages {
     stage('Clone Github repository') {
@@ -29,7 +31,9 @@ pipeline {
               chmod +x twistcli
               ./twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
-                --token ${TWISTLOCK_TOKEN} \
+                --user ${TWISTLOCK_KEY} \
+                --password ${TWISTLOCK_SECRET} \
+                --publish=false \
                 --output-file result.json \
                 --details \
                 akhng999/vulnerablewebapp          
