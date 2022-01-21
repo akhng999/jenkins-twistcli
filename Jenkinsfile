@@ -31,7 +31,7 @@ pipeline {
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
               -v ${JENKINS_HOME}/jobs/${JOB_NAME}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
-              --name twistcli \
+              --name twistcli-${BUILD_NUMBER} \
               akhng999/twistcli \
               -c /bin/bash -c \
               "./tools/twistcli images scan \
@@ -51,11 +51,10 @@ pipeline {
       }
       post {
         always {
-          sh 'pwd'
-          archiveArtifacts artifacts: '/var/tmp/result.json', fingerprint: true
           script {
-            sh 'docker rm  $(docker ps --filter name=twistcli -qa)'
+            sh 'docker rm  $(docker ps --filter name=twistcli-${BUILD_NUMBER} -qa)'
           }
+          archiveArtifacts artifacts: '/var/tmp/result.json', fingerprint: true
         }
       }
     }
