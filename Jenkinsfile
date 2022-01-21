@@ -31,6 +31,7 @@ pipeline {
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
               -v ${JENKINS_HOME}/jobs/${JOB_NAME}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
+              -name twistcli \
               akhng999/twistcli \
               ./tools/twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
@@ -41,6 +42,7 @@ pipeline {
                 --details \
                 akhng999/vulnerablewebapp      
             '''
+            sh 'ls ${JENKINS_HOME}/jobs/${JOB_NAME}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive'
           } catch (Exception e) {
             echo "Security Test Failed" 
             env.flagError = "true"  
@@ -49,9 +51,11 @@ pipeline {
       }
       post {
         always {
-          sh 'ls -lst /var/tmp'
           sh 'pwd'
           archiveArtifacts artifacts: '/var/tmp/result.json', fingerprint: true
+          script {
+            sh 'docker rm  $(docker ps --filter name=twistcli -qa)'
+          }
         }
       }
     }
