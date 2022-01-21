@@ -24,6 +24,7 @@ pipeline {
         // Scan the image
         prismaCloudScanImage ca: '',
         cert: '',
+        dockerAddress: 'unix:///var/run/docker.sock',
         image: 'akhng999/vulnerablewebapp',
         key: '',
         logLevel: 'info',
@@ -40,9 +41,9 @@ pipeline {
         }
       }
     }
-    stage ('Prisma Cloud publish') {
-        prismaCloudPublish resultsFilePattern: 'prisma-cloud-scan-results.json'
-    }
+    //stage ('Prisma Cloud publish') {
+    //    prismaCloudPublish resultsFilePattern: 'prisma-cloud-scan-results.json'
+    //}
     stage('Dockerhub Approval Request') {
       when {
         expression { env.flagError == "true" }
