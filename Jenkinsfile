@@ -41,7 +41,7 @@ pipeline {
                 --publish=false \
                 --output-file /var/tmp/result.json \
                 --details \
-                akhng999/vulnerablewebapp; chown jenkins:jenkins /var/tmp/*.json"     
+                akhng999/vulnerablewebapp"     
             '''
           } catch (Exception e) {
             echo "Security Test Failed" 
@@ -54,8 +54,10 @@ pipeline {
           script {
             sh 'echo "Cleaning up stopped twistcli container....."'
             sh 'docker rm  $(docker ps --filter name=twistcli-${BUILD_NUMBER} -qa)'
+            sh 'pwd'
+            sh 'ls -lst'
           }
-          archiveArtifacts artifacts: '**/*.json', fingerprint: true
+          //archiveArtifacts artifacts: '**/*.json', fingerprint: true
         }
       }
     }
