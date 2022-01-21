@@ -31,7 +31,7 @@ pipeline {
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
               -v ${JENKINS_HOME}/jobs/${JOB_NAME}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
-              -name twistcli \
+              --name twistcli \
               akhng999/twistcli \
               ./tools/twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
