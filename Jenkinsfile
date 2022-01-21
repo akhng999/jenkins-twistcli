@@ -30,7 +30,7 @@ pipeline {
             sh '''
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
-              -v ${JENKINS_HOME}/jobs/${JOB_BASE_NAME}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/:/var/tmp/ \
+              -v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/:/var/tmp/ \
               --name twistcli-${BUILD_NUMBER} \
               akhng999/twistcli \
               sh -c \
