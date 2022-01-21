@@ -40,6 +40,9 @@ pipeline {
         }
       }
     }
+    stage ('Prisma Cloud publish') {
+        prismaCloudPublish resultsFilePattern: 'prisma-cloud-scan-results.json'
+    }
     stage('Dockerhub Approval Request') {
       when {
         expression { env.flagError == "true" }
