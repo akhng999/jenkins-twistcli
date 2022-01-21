@@ -30,7 +30,7 @@ pipeline {
             sh '''
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
-              -v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/:/var/tmp/ \
+              -v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
               --name twistcli-${BUILD_NUMBER} \
               akhng999/twistcli \
               sh -c \
@@ -39,9 +39,9 @@ pipeline {
                 --user ${TWISTLOCK_KEY} \
                 --password ${TWISTLOCK_SECRET} \
                 --publish=false \
-                --output-file result.json \
+                --output-file /var/tmp/result.json \
                 --details \
-                akhng999/vulnerablewebapp; cp -p result.json /var/tmp"     
+                akhng999/vulnerablewebapp; chown jenkins:jenkins /var/tmp/*.json"     
             '''
           } catch (Exception e) {
             echo "Security Test Failed" 
