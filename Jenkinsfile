@@ -54,8 +54,7 @@ pipeline {
           script {
             sh 'echo "Cleaning up stopped twistcli container....."'
             sh 'docker rm  $(docker ps --filter name=twistcli-${BUILD_NUMBER} -qa)'
-            sh 'pwd'
-            sh 'ls -lst'
+            sh 'chown jenkins:jenkins ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive/*.json'
           }
           //archiveArtifacts artifacts: '**/*.json', fingerprint: true
         }
