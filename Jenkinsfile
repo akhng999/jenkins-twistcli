@@ -21,32 +21,22 @@ pipeline {
     }
     stage('Scan container before pushing to Dockerhub') {    
       steps {
-        script {      
-          try {
-            /* checkpoint cloudguard
-            sh 'docker save akhng999/vulnerablewebapp -o vwa.tar' 
-            sh './shiftleft image-scan -i ./vwa.tar -t 1800'
-            */
-            sh '''
-              chmod +x twistcli
-              ./twistcli images scan \
-                --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
-                --user ${TWISTLOCK_KEY} \
-                --password ${TWISTLOCK_SECRET} \
-                --publish=false \
-                --output-file result.json \
-                --details \
-                akhng999/vulnerablewebapp          
-            '''
-          } catch (Exception e) {
-            echo "Security Test Failed" 
-            env.flagError = "true"  
-          }
-        }
+        // Scan the image
+        prismaCloudScanImage ca: '',
+        cert: '',
+        image: 'akhng999/vulnerablewebapp*',
+        key: '',
+        logLevel: 'info',
+        podmanPath: '',
+        project: '',
+        resultsFile: 'prisma-cloud-scan-results.json',
+        ignoreImageBuildTime:true
       }
       post {
         always {
-          archiveArtifacts artifacts: 'result.json', fingerprint: true
+          //archiveArtifacts artifacts: 'result.json', fingerprint: true
+          // The post section lets you run the publish step regardless of the scan results
+          prismaCloudPublish resultsFilePattern: 'prisma-cloud-scan-results.json
         }
       }
     }
