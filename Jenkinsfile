@@ -39,10 +39,8 @@ pipeline {
                 --publish=false \
                 --output-file /var/tmp/result.json \
                 --details \
-                akhng999/vulnerablewebapp          
+                akhng999/vulnerablewebapp      
             '''
-            sh 'ls -lst /var/tmp'
-            sh 'pwd'
           } catch (Exception e) {
             echo "Security Test Failed" 
             env.flagError = "true"  
@@ -51,6 +49,8 @@ pipeline {
       }
       post {
         always {
+          sh 'ls -lst /var/tmp'
+          sh 'pwd'
           archiveArtifacts artifacts: '/var/tmp/result.json', fingerprint: true
         }
       }
