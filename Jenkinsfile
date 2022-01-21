@@ -41,6 +41,8 @@ pipeline {
                 --details \
                 akhng999/vulnerablewebapp          
             '''
+            sh 'ls -lst /var/tmp'
+            sh 'pwd'
           } catch (Exception e) {
             echo "Security Test Failed" 
             env.flagError = "true"  
