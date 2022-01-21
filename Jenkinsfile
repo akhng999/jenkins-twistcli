@@ -33,7 +33,7 @@ pipeline {
               -v ${JENKINS_HOME}/jobs/${JOB_NAME}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
               --name twistcli-${BUILD_NUMBER} \
               akhng999/twistcli \
-              -c /bin/bash -c \
+              /bin/bash -c \
               "./tools/twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
                 --user ${TWISTLOCK_KEY} \
