@@ -33,16 +33,16 @@ pipeline {
               -v ${JENKINS_HOME}/jobs/${JOB_NAME}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
               --name twistcli \
               akhng999/twistcli \
-              ./tools/twistcli images scan \
+              -c /bin/bash -c \
+              "./tools/twistcli images scan \
                 --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
                 --user ${TWISTLOCK_KEY} \
                 --password ${TWISTLOCK_SECRET} \
                 --publish=false \
                 --output-file /var/tmp/result.json \
                 --details \
-                akhng999/vulnerablewebapp      
+                akhng999/vulnerablewebapp; ls -lst /var/tmp/"     
             '''
-            sh 'ls ${JENKINS_HOME}/jobs/${JOB_NAME}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive'
           } catch (Exception e) {
             echo "Security Test Failed" 
             env.flagError = "true"  
