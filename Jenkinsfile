@@ -1,7 +1,6 @@
 pipeline {
       agent any
       environment {
-        //TWISTLOCK_TOKEN = credentials("TWISTLOCK_TOKEN")
         TWISTLOCK_KEY = credentials("TWISTLOCK_KEY")
         TWISTLOCK_SECRET = credentials("TWISTLOCK_SECRET")
        }
@@ -15,7 +14,7 @@ pipeline {
     stage('Build Docker Image') {    
       steps {
         script {      
-          app = docker.build("akhng999/vulnerablewebapp") 
+          app = docker.build("akhng999/vulnerablewebapp:${BRANCH_NAME}") 
         }
       } 
     }
@@ -25,7 +24,7 @@ pipeline {
         prismaCloudScanImage ca: '',
         cert: '',
         dockerAddress: 'unix:///var/run/docker.sock',
-        image: 'akhng999/vulnerablewebapp',
+        image: 'akhng999/vulnerablewebapp:${BRANCH_NAME}',
         key: '',
         logLevel: 'info',
         podmanPath: '',
@@ -37,7 +36,7 @@ pipeline {
         always {
           //archiveArtifacts artifacts: 'result.json', fingerprint: true
           // The post section lets you run the publish step regardless of the scan results
-          prismaCloudPublish resultsFilePattern: 'prisma-cloud-scan-results.json'
+          //prismaCloudPublish resultsFilePattern: 'prisma-cloud-scan-results.json'
         }
       }
     }
