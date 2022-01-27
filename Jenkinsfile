@@ -25,15 +25,15 @@ pipeline {
         script {
           def TCLI_VERSION = sh("./twistcli | grep -A1 VERSION | sed 1d", returnStdout:true).trim()
           def CONSOLE_VERSION = sh("curl -k -u \"${TWISTLOCK_KEY}:${TWISTLOCK_SECRET}\" https://$TL_CONSOLE/api/v1/version | tr -d \'\"'", returnStdout:true).trim()
-        }
+      
+          echo "TCLI_VERSION = $TCLI_VERSION"
+          echo "CONSOLE_VERSION = $CONSOLE_VERSION"
 
-        println "TCLI_VERSION = $TCLI_VERSION"
-        println "CONSOLE_VERSION = $CONSOLE_VERSION"
-
-        if ("$TCLI_VERSION" != "$CONSOLE_VERSION") {
-          println "downloading twistcli"
-          sh 'curl -k -u ${TWISTLOCK_KEY}:${TWISTLOCK_SECRET} --output ./twistcli https://$TL_CONSOLE/api/v1/util/twistcli'
-          sh 'sudo chmod a+x ./twistcli'
+          if ("$TCLI_VERSION" != "$CONSOLE_VERSION") {
+            echo "downloading twistcli"
+            sh 'curl -k -u ${TWISTLOCK_KEY}:${TWISTLOCK_SECRET} --output ./twistcli https://$TL_CONSOLE/api/v1/util/twistcli'
+            sh 'sudo chmod a+x ./twistcli'
+          }
         }
       }      
     }
