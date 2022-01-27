@@ -27,7 +27,7 @@ pipeline {
             sh '''
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
-              //-v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
+              #-v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
               -v ${WORKSPACE}:/var/tmp/ \
               --name twistcli-${BUILD_NUMBER} \
               akhng999/twistcli \
@@ -39,7 +39,7 @@ pipeline {
                 --publish=false \
                 --output-file /var/tmp/result.json \
                 --details \
-                akhng999/vulnerablewebapp"     
+                akhng999/vulnerablewebapp:${BRANCH_NAME}"     
             '''
           } catch (Exception e) {
             echo "Security Test Failed" 
