@@ -6,6 +6,7 @@ pipeline {
           TWISTLOCK_SECRET = credentials("TWISTLOCK_SECRET")
           TL_CONSOLE = "https://us-east1.cloud.twistlock.com/us-2-158255088"
         }
+        //#-v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
         
   stages {
     stage('Clone Github repository') {
@@ -27,7 +28,6 @@ pipeline {
             sh '''
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
-              #-v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
               -v ${WORKSPACE}:/var/tmp/ \
               --name twistcli-${BUILD_NUMBER} \
               akhng999/twistcli \
