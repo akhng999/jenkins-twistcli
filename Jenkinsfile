@@ -7,7 +7,7 @@ pipeline {
           TL_CONSOLE = "https://us-east1.cloud.twistlock.com/us-2-158255088"
         }
         //#-v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
-        
+
   stages {
     stage('Clone Github repository') {
       steps {
@@ -28,7 +28,7 @@ pipeline {
             sh '''
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
-              -v ${WORKSPACE}:/var/tmp/ \
+              -v ${WORKSPACE}:/opt/twistcli/output \
               --name twistcli-${BUILD_NUMBER} \
               akhng999/twistcli \
               sh -c \
@@ -37,7 +37,7 @@ pipeline {
                 --user $TWISTLOCK_KEY \
                 --password $TWISTLOCK_SECRET \
                 --publish=false \
-                --output-file /var/tmp/result.json \
+                --output-file output/result.json \
                 --details \
                 akhng999/vulnerablewebapp:${BRANCH_NAME}"     
             '''
