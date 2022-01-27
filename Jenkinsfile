@@ -16,7 +16,7 @@ pipeline {
     stage('Build Docker Image') {    
       steps {
         script {      
-          app = docker.build("akhng999/vulnerablewebapp") 
+          app = docker.build("akhng999/vulnerablewebapp:${BRANCH_NAME}") 
         }
       } 
     }
@@ -50,7 +50,7 @@ pipeline {
                 --publish=false \
                 --output-file result.json \
                 --details \
-                akhng999/vulnerablewebapp          
+                akhng999/vulnerablewebapp:${BRANCH_NAME}         
             '''
           } catch (Exception e) {
             echo "Security Test Failed" 
