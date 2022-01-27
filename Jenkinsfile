@@ -53,6 +53,7 @@ pipeline {
             sh 'echo "Cleaning up stopped twistcli container....."'
             sh 'docker rm  $(docker ps --filter name=twistcli-${BUILD_NUMBER} -qa)'
             //sh 'sudo chown jenkins:jenkins ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive/*.json'
+            sh 'sudo chown jenkins:jenkins report.json'
           }
           archiveArtifacts artifacts: '**/*.json', fingerprint: true
         }
