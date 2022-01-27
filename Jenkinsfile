@@ -27,7 +27,8 @@ pipeline {
             sh '''
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
-              -v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
+              //-v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
+              -v ${WORKSPACE}:/var/tmp/ \
               --name twistcli-${BUILD_NUMBER} \
               akhng999/twistcli \
               sh -c \
@@ -51,9 +52,9 @@ pipeline {
           script {
             sh 'echo "Cleaning up stopped twistcli container....."'
             sh 'docker rm  $(docker ps --filter name=twistcli-${BUILD_NUMBER} -qa)'
-            sh 'chown jenkins:jenkins ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive/*.json'
+            //sh 'sudo chown jenkins:jenkins ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive/*.json'
           }
-          //archiveArtifacts artifacts: '**/*.json', fingerprint: true
+          archiveArtifacts artifacts: '**/*.json', fingerprint: true
         }
       }
     }
