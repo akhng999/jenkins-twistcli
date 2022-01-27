@@ -38,7 +38,7 @@ pipeline {
                 --publish=false \
                 --output-file output/result.json \
                 --details \
-                akhng999/vulnerablewebapp:${BRANCH_NAME}; chown a+r output/result.hson"     
+                akhng999/vulnerablewebapp:${BRANCH_NAME}"     
             '''
           } catch (Exception e) {
             echo "Security Test Failed" 
