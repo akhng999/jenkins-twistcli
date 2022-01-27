@@ -4,6 +4,7 @@ pipeline {
         //TWISTLOCK_TOKEN = credentials("TWISTLOCK_TOKEN")
         TWISTLOCK_KEY = credentials("TWISTLOCK_KEY")
         TWISTLOCK_SECRET = credentials("TWISTLOCK_SECRET")
+        TL_CONSOLE = "https://us-east1.cloud.twistlock.com/us-2-158255088"
        }
         
   stages {
@@ -19,18 +20,26 @@ pipeline {
         }
       } 
     }
+    stage('Check twistcli version') {
+      def TCLI_VERSION = sh(script: "./twistcli | grep -A1 VERSION | sed 1d", returnStdout:true).trim()
+      def CONSOLE_VERSION = sh(script: "curl -k -u \"${TWISTLOCK_KEY}:${TWISTLOCK_SECRET}\" https://$TL_CONSOLE/api/v1/version | tr -d \'\"'", returnStdout:true).trim()
+
+      println "TCLI_VERSION = $TCLI_VERSION"
+      println "CONSOLE_VERSION = $CONSOLE_VERSION"
+
+      if ("$TCLI_VERSION" != "$CONSOLE_VERSION") {
+        println "downloading twistcli"
+        sh 'curl -k -u ${TWISTLOCK_KEY}:${TWISTLOCK_SECRET} --output ./twistcli https://$TL_CONSOLE/api/v1/util/twistcli'
+        sh 'sudo chmod a+x ./twistcli'
+      }
+    }
     stage('Scan container before pushing to Dockerhub') {    
       steps {
         script {      
           try {
-            /* checkpoint cloudguard
-            sh 'docker save akhng999/vulnerablewebapp -o vwa.tar' 
-            sh './shiftleft image-scan -i ./vwa.tar -t 1800'
-            */
             sh '''
-              chmod +x twistcli
               ./twistcli images scan \
-                --address https://us-east1.cloud.twistlock.com/us-2-158255088 \
+                --address $TL_CONSOLE \
                 --user ${TWISTLOCK_KEY} \
                 --password ${TWISTLOCK_SECRET} \
                 --publish=false \
