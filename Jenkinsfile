@@ -5,8 +5,7 @@ pipeline {
           TWISTLOCK_KEY = credentials("TWISTLOCK_KEY")
           TWISTLOCK_SECRET = credentials("TWISTLOCK_SECRET")
           TL_CONSOLE = "https://us-east1.cloud.twistlock.com/us-2-158255088"
-        }
-        //#-v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/var/tmp/ \
+      }
 
   stages {
     stage('Clone Github repository') {
@@ -28,7 +27,7 @@ pipeline {
             sh '''
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
-              -v ${WORKSPACE}:/opt/twistcli/output \
+              -v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/opt/twistcli/output \
               --name twistcli-${BUILD_NUMBER} \
               akhng999/twistcli \
               sh -c \
@@ -39,7 +38,7 @@ pipeline {
                 --publish=false \
                 --output-file output/result.json \
                 --details \
-                akhng999/vulnerablewebapp:${BRANCH_NAME}"     
+                akhng999/vulnerablewebapp:${BRANCH_NAME}; chown a+r output/result.hson"     
             '''
           } catch (Exception e) {
             echo "Security Test Failed" 
@@ -53,9 +52,9 @@ pipeline {
             sh 'echo "Cleaning up stopped twistcli container....."'
             sh 'docker rm  $(docker ps --filter name=twistcli-${BUILD_NUMBER} -qa)'
             //sh 'sudo chown jenkins:jenkins ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive/*.json'
-            sh 'sudo chown jenkins:jenkins report.json'
+
           }
-          archiveArtifacts artifacts: '**/*.json', fingerprint: true
+          //archiveArtifacts artifacts: '**/*.json', fingerprint: true
         }
       }
     }
