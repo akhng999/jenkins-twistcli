@@ -32,7 +32,7 @@ pipeline {
 
           if ("$TCLI_VERSION" != "$CONSOLE_VERSION") {
             echo "downloading twistcli"
-            sh 'curl -k -u $TWISTLOCK_KEY:$TWISTLOCK_SECRET --output ./twistcli https://$TL_CONSOLE/api/v1/util/twistcli'
+            sh 'curl -k -u $TWISTLOCK_KEY:$TWISTLOCK_SECRET --output ./twistcli $TL_CONSOLE/api/v1/util/twistcli'
             //sh 'sudo chmod a+x ./twistcli'
           }
         }
