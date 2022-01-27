@@ -21,17 +21,19 @@ pipeline {
       } 
     }
     stage('Check twistcli version') {
-      def TCLI_VERSION = sh(script: "./twistcli | grep -A1 VERSION | sed 1d", returnStdout:true).trim()
-      def CONSOLE_VERSION = sh(script: "curl -k -u \"${TWISTLOCK_KEY}:${TWISTLOCK_SECRET}\" https://$TL_CONSOLE/api/v1/version | tr -d \'\"'", returnStdout:true).trim()
+      steps {
+        def TCLI_VERSION = sh(script: "./twistcli | grep -A1 VERSION | sed 1d", returnStdout:true).trim()
+        def CONSOLE_VERSION = sh(script: "curl -k -u \"${TWISTLOCK_KEY}:${TWISTLOCK_SECRET}\" https://$TL_CONSOLE/api/v1/version | tr -d \'\"'", returnStdout:true).trim()
+        
+        println "TCLI_VERSION = $TCLI_VERSION"
+        println "CONSOLE_VERSION = $CONSOLE_VERSION"
 
-      println "TCLI_VERSION = $TCLI_VERSION"
-      println "CONSOLE_VERSION = $CONSOLE_VERSION"
-
-      if ("$TCLI_VERSION" != "$CONSOLE_VERSION") {
-        println "downloading twistcli"
-        sh 'curl -k -u ${TWISTLOCK_KEY}:${TWISTLOCK_SECRET} --output ./twistcli https://$TL_CONSOLE/api/v1/util/twistcli'
-        sh 'sudo chmod a+x ./twistcli'
-      }
+        if ("$TCLI_VERSION" != "$CONSOLE_VERSION") {
+          println "downloading twistcli"
+          sh 'curl -k -u ${TWISTLOCK_KEY}:${TWISTLOCK_SECRET} --output ./twistcli https://$TL_CONSOLE/api/v1/util/twistcli'
+          sh 'sudo chmod a+x ./twistcli'
+        }
+      }      
     }
     stage('Scan container before pushing to Dockerhub') {    
       steps {
