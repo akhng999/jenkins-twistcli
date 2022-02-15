@@ -60,7 +60,7 @@ pipeline {
             def json = readJSON(file: 'scan_results.json')
             writeJSON(json: json, file: 'scan_results_pp.json', pretty: 1)
           }
-          archiveArtifacts artifacts: 'scan_results_pp.json', fingerprint: true
+          archiveArtifacts artifacts: '*.json', fingerprint: true
         }
       }
     }
