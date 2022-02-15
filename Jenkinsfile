@@ -14,7 +14,8 @@ pipeline {
     stage('Build Docker Image') {    
       steps {
         script {      
-          app = docker.build("akhng999/vulnerablewebapp:${BRANCH_NAME}") 
+          //app = docker.build("akhng999/vulnerablewebapp:${BRANCH_NAME}") 
+          echo "Building Dodcker Image................"
         }
       } 
     }
