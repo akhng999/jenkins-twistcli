@@ -34,7 +34,7 @@ pipeline {
                 --address $TL_CONSOLE \
                 --user $TWISTLOCK_KEY \
                 --password $TWISTLOCK_SECRET \
-                --publish=false \
+                --publish=true \
                 --details \
                 akhng999/vulnerablewebapp:${BRANCH_NAME}"     
             '''
