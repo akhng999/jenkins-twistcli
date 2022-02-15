@@ -27,7 +27,6 @@ pipeline {
             sh '''
               docker run \
               -v /var/run/docker.sock:/var/run/docker.sock \
-              -v ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive:/opt/twistcli/output \
               --name twistcli-${BUILD_NUMBER} \
               akhng999/twistcli \
               sh -c \
@@ -36,7 +35,6 @@ pipeline {
                 --user $TWISTLOCK_KEY \
                 --password $TWISTLOCK_SECRET \
                 --publish=false \
-                --output-file output/result.json \
                 --details \
                 akhng999/vulnerablewebapp:${BRANCH_NAME}"     
             '''
@@ -52,7 +50,12 @@ pipeline {
             sh 'echo "Cleaning up stopped twistcli container....."'
             sh 'docker rm  $(docker ps --filter name=twistcli-${BUILD_NUMBER} -qa)'
             //sh 'sudo chown jenkins:jenkins ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive/*.json'
-
+            sh 'curl \
+                  -H 'Content-Type: application/json' \
+                  -H 'Authorization: Basic MjUyYzU5NmUtZjE4Yy00NDYzLThlMTQtMjEzZjkwNWM4ZDU2Om9jVkRqazEvZ0xwUno5U1dIUjNRZVM0RlVCWT0=' \
+                  -o scan_results.json \
+                  https://us-east1.cloud.twistlock.com/us-2-158255088/api/v1/scans?search=$app.id&limit=1
+            '
           }
           //archiveArtifacts artifacts: '**/*.json', fingerprint: true
         }
