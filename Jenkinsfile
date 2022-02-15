@@ -51,8 +51,8 @@ pipeline {
             sh 'docker rm  $(docker ps --filter name=twistcli-${BUILD_NUMBER} -qa)'
             //sh 'sudo chown jenkins:jenkins ${JENKINS_HOME}/jobs/${JOB_NAME%%/*}/branches/${BRANCH_NAME}/builds/${BUILD_NUMBER}/archive/*.json'
             sh 'curl \
-                  -H 'Content-Type: application/json' \
-                  -H 'Authorization: Basic MjUyYzU5NmUtZjE4Yy00NDYzLThlMTQtMjEzZjkwNWM4ZDU2Om9jVkRqazEvZ0xwUno5U1dIUjNRZVM0RlVCWT0=' \
+                  -H "Content-Type: application/json" \
+                  -H "Authorization: Basic MjUyYzU5NmUtZjE4Yy00NDYzLThlMTQtMjEzZjkwNWM4ZDU2Om9jVkRqazEvZ0xwUno5U1dIUjNRZVM0RlVCWT0=" \
                   -o scan_results.json \
                   https://us-east1.cloud.twistlock.com/us-2-158255088/api/v1/scans?search=$app.id&limit=1
             '
