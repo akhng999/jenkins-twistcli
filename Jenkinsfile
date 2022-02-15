@@ -55,7 +55,7 @@ pipeline {
                 -H "Content-Type: application/json" \
                 -H "Authorization: Basic MjUyYzU5NmUtZjE4Yy00NDYzLThlMTQtMjEzZjkwNWM4ZDU2Om9jVkRqazEvZ0xwUno5U1dIUjNRZVM0RlVCWT0=" \
                 -o scan_results.json \
-                "https://us-east1.cloud.twistlock.com/us-2-158255088/api/v1/scans?search=$app.id&limit=1"
+                "https://us-east1.cloud.twistlock.com/us-2-158255088/api/v1/scans?search=akhng999/vulnerablewebapp:${BRANCH_NAME}&limit=1"
             '''
           }
           //archiveArtifacts artifacts: '**/*.json', fingerprint: true
