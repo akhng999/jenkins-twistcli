@@ -5,6 +5,7 @@ pipeline {
           TWISTLOCK_KEY = credentials("TWISTLOCK_KEY")
           TWISTLOCK_SECRET = credentials("TWISTLOCK_SECRET")
           TL_CONSOLE = "https://us-east1.cloud.twistlock.com/us-2-158255088"
+          TL_BASIC_SECRET = credentials("TL_BASIC_SECRET")
       }
 
   stages {
@@ -17,6 +18,7 @@ pipeline {
       steps {
         script {      
           //app = docker.build("akhng999/vulnerablewebapp:${BRANCH_NAME}") 
+          echo "Building Dodcker Image................"
         }
       } 
     }
@@ -53,7 +55,7 @@ pipeline {
             sh '''
               curl \
                 -H "Content-Type: application/json" \
-                -H "Authorization: Basic MjUyYzU5NmUtZjE4Yy00NDYzLThlMTQtMjEzZjkwNWM4ZDU2Om9jVkRqazEvZ0xwUno5U1dIUjNRZVM0RlVCWT0=" \
+                -H "Authorization: Basic $TL_BASIC_SECRET" \
                 -o scan_results.json \
                 "https://us-east1.cloud.twistlock.com/us-2-158255088/api/v1/scans?search=akhng999/vulnerablewebapp:${BRANCH_NAME}&limit=1"
             '''
