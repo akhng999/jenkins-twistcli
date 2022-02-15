@@ -58,7 +58,9 @@ pipeline {
                 "https://us-east1.cloud.twistlock.com/us-2-158255088/api/v1/scans?search=akhng999/vulnerablewebapp:${BRANCH_NAME}&limit=1"
             '''
           }
-          //archiveArtifacts artifacts: '**/*.json', fingerprint: true
+          def json = readJSON(file: 'scan_results.json')
+          writeJSON(json: json, file: 'scan_results_pp.json', pretty: 1)
+          archiveArtifacts artifacts: 'scan_results_pp.json', fingerprint: true
         }
       }
     }
